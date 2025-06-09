@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+.card {
+  background: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00000044;
+}
+
+.status-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.status-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+}
+
+.status-connected {
+  background-color: #346646;
+}
+
+.status-disconnected {
+  background-color: #702323;
+}
+
+.update-time {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
+
+.error-message {
+  width: 100%;
+  text-align: center;
+  color: #702323;
+  font-size: 0.9rem;
+}
+
+.sensor-card {
+  text-align: center;
+}
+
+.sensor-card h2 {
+  font-size: 1.3rem;
+  color: #d1d1d1;
+  margin-bottom: 1rem;
+}
+
+.sensor-value {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffae00;
+  background-color: #1f1f1f;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.bomba-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.pump-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  color: #f3f3f3;
+  margin-bottom: 1rem;
+}
+
+.pump-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #444;
+}
+
+.indicator-on {
+  background-color: #22c55e;
+}
+
+.indicator-off {
+  background-color: #ef4444;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-success {
+  background-color: #346646;
+  color: #ffffff;
+}
+
+.btn-success:hover {
+  background-color: #16a34a;
+}
+
+.btn-danger {
+  background-color: #5c2030;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}

@@ -1,0 +1,79 @@
+// Sistema de Irrigacao - Arduino apenas envia dados e recebe comandos
+const int PINO_SENSOR = A0;
+const int PINO_RELE = 2;
+
+// Para calibracao e conversao para porcentagem
+const int VALOR_SECO_MAX = 1023;       // Sensor totalmente seco
+const int VALOR_UMIDO_MAX = 300;       // Sensor totalmente úmido
+
+bool bomba_ligada = false;
+bool monitoramento_ativo = false;
+unsigned long ultimo_tempo = 0;
+const unsigned long INTERVALO_LEITURA = 2000;
+
+void setup() {
+  pinMode(PINO_SENSOR, INPUT);
+  pinMode(PINO_RELE, OUTPUT);
+  digitalWrite(PINO_RELE, LOW);
+  
+  Serial.begin(9600);
+  Serial.println("ARDUINO_READY");
+}
+
+void loop() {
+  unsigned long tempo_atual = millis();
+  
+  // Verifica comandos do servidor web
+  if (Serial.available() > 0) {
+    String comando = Serial.readStringUntil('\n');
+    comando.trim();
+    
+    if (comando == "LIGAR_BOMBA") {
+      digitalWrite(PINO_RELE, HIGH);
+      bomba_ligada = true;
+      Serial.println("BOMBA_LIGADA");
+    }
+    else if (comando == "DESLIGAR_BOMBA") {
+      digitalWrite(PINO_RELE, LOW);
+      bomba_ligada = false;
+      Serial.println("BOMBA_DESLIGADA");
+    }
+    else if (comando == "START_MONITORING") {
+      monitoramento_ativo = true;
+      Serial.println("MONITORAMENTO_INICIADO");
+    }
+    else if (comando == "STOP_MONITORING") {
+      monitoramento_ativo = false;
+      Serial.println("MONITORAMENTO_PARADO");
+    }
+    else if (comando == "GET_STATUS") {
+      enviarStatus();
+    }
+  }
+  
+  // Leitura do sensor a cada intervalo (só se monitoramento ativo)
+  if (monitoramento_ativo && (tempo_atual - ultimo_tempo >= INTERVALO_LEITURA)) {
+    ultimo_tempo = tempo_atual;
+    enviarStatus();
+  }
+  
+  delay(100);
+}
+
+void enviarStatus() {
+  int valor_bruto = analogRead(PINO_SENSOR);
+  
+  // Calcula porcentagem de umidade para exibição
+  int umidade_percent = map(valor_bruto, VALOR_SECO_MAX, VALOR_UMIDO_MAX, 0, 100);
+  umidade_percent = constrain(umidade_percent, 0, 100);
+  
+  // Formato: DATA|umidade_percent|bomba_status|valor_bruto|timestamp
+  Serial.print("DATA|");
+  Serial.print(umidade_percent);
+  Serial.print("|");
+  Serial.print(bomba_ligada ? "ON" : "OFF");
+  Serial.print("|");
+  Serial.print(valor_bruto);
+  Serial.print("|");
+  Serial.println(millis());
+}

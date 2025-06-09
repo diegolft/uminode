@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel de Irrigação</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Painel de Irrigação</h1>
+
+    <div class="card status-card">
+      <div id="connectionStatus" class="status-badge status-disconnected">Desconectado</div>
+      <div id="lastUpdate" class="update-time">Última atualização: --</div>
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+    </div>
+
+    <div class="card sensor-card">
+      <h2>Sensor de Umidade</h2>
+      <div id="sensorValue" class="sensor-value">--</div>
+    </div>
+
+    <div class="card bomba-card">
+      <h2>Status da Bomba</h2>
+      <div id="pumpStatus" class="pump-status">
+        <div id="pumpIndicator" class="pump-indicator indicator-off"></div>
+        <div id="pumpText">Bomba Desligada</div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-success" onclick="ligarBomba()">Ligar Bomba</button>
+        <button class="btn btn-danger" onclick="desligarBomba()">Desligar Bomba</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <!-- Botão de automação opcional via JS -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
