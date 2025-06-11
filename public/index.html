@@ -7,36 +7,188 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Painel de Irrigação</h1>
-
-    <div class="card status-card">
-      <div id="connectionStatus" class="status-badge status-disconnected">Desconectado</div>
-      <div id="lastUpdate" class="update-time">Última atualização: --</div>
-      <div id="errorMessage" class="error-message" style="display: none;"></div>
-    </div>
-
-    <div class="card sensor-card">
-      <h2>Sensor de Umidade</h2>
-      <div id="sensorValue" class="sensor-value">--</div>
-    </div>
-
-    <div class="card bomba-card">
-      <h2>Status da Bomba</h2>
-      <div id="pumpStatus" class="pump-status">
-        <div id="pumpIndicator" class="pump-indicator indicator-off"></div>
-        <div id="pumpText">Bomba Desligada</div>
+  <!-- Header com Menu -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-title">
+        <h2>Sistema de Irrigação</h2>
       </div>
-      <div class="controls">
-        <button class="btn btn-success" onclick="ligarBomba()">Ligar Bomba</button>
-        <button class="btn btn-danger" onclick="desligarBomba()">Desligar Bomba</button>
+      <nav class="header-nav">
+        <button onclick="navegarPara('painel')" class="nav-btn active" data-page="painel">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-text">Painel</span>
+        </button>
+        <button onclick="navegarPara('doc-arduino')" class="nav-btn" data-page="doc-arduino">
+          <span class="nav-icon">🔧</span>
+          <span class="nav-text">Arduino</span>
+        </button>
+        <button onclick="navegarPara('doc-frontend')" class="nav-btn" data-page="doc-frontend">
+          <span class="nav-icon">💻</span>
+          <span class="nav-text">Frontend</span>
+        </button>
+        <button onclick="navegarPara('doc-backend')" class="nav-btn" data-page="doc-backend">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-text">Backend</span>
+        </button>
+        <button onclick="navegarPara('doc-circuito')" class="nav-btn" data-page="doc-circuito">
+          <span class="nav-icon">🔌</span>
+          <span class="nav-text">Circuito</span>
+        </button>
+        <button onclick="mostrarPopupNota()" class="nav-btn special">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-text">Nota 10</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <div class="main-content">
+    <!-- Painel de Controle -->
+    <div id="painel" class="page active">
+      <div class="container">
+        <h1>Painel de Irrigação</h1>
+
+        <div class="card status-card">
+          <div id="connectionStatus" class="status-badge status-disconnected">Desconectado</div>
+          <div id="lastUpdate" class="update-time">Última atualização: --</div>
+          <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+
+        <div class="card sensor-card">
+          <h2>Sensor de Umidade</h2>
+          <div id="sensorValue" class="sensor-value">--</div>
+        </div>
+
+        <div class="card bomba-card">
+          <h2>Status da Bomba</h2>
+          <div id="pumpStatus" class="pump-status">
+            <div id="pumpIndicator" class="pump-indicator indicator-off"></div>
+            <div id="pumpText">Bomba Desligada</div>
+          </div>
+          <div class="controls">
+            <button class="btn btn-success" onclick="ligarBomba()">Ligar Bomba</button>
+            <button class="btn btn-danger" onclick="desligarBomba()">Desligar Bomba</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <!-- Botão de automação opcional via JS -->
+        </div>
       </div>
     </div>
 
-    <div class="controls">
-      <!-- Botão de automação opcional via JS -->
+    <!-- Páginas de Documentação -->
+    <div id="doc-arduino" class="page">
+      <div class="container">
+        <h1>Documentação Arduino</h1>
+        <div class="card">
+          <div class="doc-content">
+            <h2>Configuração do Arduino</h2>
+            <p>Esta seção contém informações sobre a configuração e programação do Arduino para o sistema de irrigação.</p>
+            <h3>Componentes Necessários</h3>
+            <ul>
+              <li>Arduino Uno ou similar</li>
+              <li>Sensor de umidade do solo</li>
+              <li>Relé para controle da bomba</li>
+              <li>Bomba d'água</li>
+              <li>Módulo WiFi (ESP8266 ou similar)</li>
+            </ul>
+            <h3>Código Base</h3>
+            <p>O código do Arduino deve incluir a leitura do sensor de umidade e o controle da bomba através de comandos recebidos via comunicação serial ou WiFi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="doc-frontend" class="page">
+      <div class="container">
+        <h1>Documentação Front-end</h1>
+        <div class="card">
+          <div class="doc-content">
+            <h2>Interface do Usuário</h2>
+            <p>O front-end foi desenvolvido com HTML, CSS e JavaScript vanilla para proporcionar uma interface simples e responsiva.</p>
+            <h3>Estrutura dos Arquivos</h3>
+            <ul>
+              <li><strong>index.html</strong> - Estrutura principal da página</li>
+              <li><strong>style.css</strong> - Estilos e tema escuro</li>
+              <li><strong>script.js</strong> - Lógica de automação e comunicação com o backend</li>
+            </ul>
+            <h3>Funcionalidades</h3>
+            <ul>
+              <li>Monitoramento em tempo real do sensor de umidade</li>
+              <li>Controle manual da bomba</li>
+              <li>Sistema de automação configurável</li>
+              <li>Interface responsiva para dispositivos móveis</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="doc-backend" class="page">
+      <div class="container">
+        <h1>Documentação Back-end</h1>
+        <div class="card">
+          <div class="doc-content">
+            <h2>Servidor Node.js</h2>
+            <p>O backend foi desenvolvido em Node.js com Express para gerenciar a comunicação entre o frontend e o Arduino.</p>
+            <h3>Endpoints da API</h3>
+            <ul>
+              <li><strong>GET /api/status</strong> - Retorna o status atual do sistema</li>
+              <li><strong>POST /api/bomba/ligar</strong> - Liga a bomba de irrigação</li>
+              <li><strong>POST /api/bomba/desligar</strong> - Desliga a bomba de irrigação</li>
+            </ul>
+            <h3>Comunicação Serial</h3>
+            <p>O servidor utiliza a biblioteca SerialPort para comunicação com o Arduino via USB ou módulo WiFi.</p>
+            <h3>Configuração</h3>
+            <p>As configurações de porta serial e parâmetros de automação podem ser ajustadas no arquivo server.js.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="doc-circuito" class="page">
+      <div class="container">
+        <h1>Documentação Circuito</h1>
+        <div class="card">
+          <div class="doc-content">
+            <h2>Esquema do Circuito</h2>
+            <p>Esta seção descreve as conexões elétricas necessárias para o sistema de irrigação automatizada.</p>
+            <h3>Conexões do Arduino</h3>
+            <ul>
+              <li><strong>Pino A0</strong> - Sensor de umidade do solo (saída analógica)</li>
+              <li><strong>Pino 7</strong> - Controle do relé da bomba</li>
+              <li><strong>5V e GND</strong> - Alimentação dos sensores</li>
+              <li><strong>Pinos 2 e 3</strong> - Comunicação serial com módulo WiFi (opcional)</li>
+            </ul>
+            <h3>Sensor de Umidade</h3>
+            <p>O sensor de umidade capacitivo deve ser conectado ao pino analógico A0. Valores menores indicam solo mais seco.</p>
+            <h3>Relé e Bomba</h3>
+            <p>O relé deve ser conectado ao pino digital 7 e controlar a alimentação da bomba d'água. Importante usar um relé adequado para a corrente da bomba.</p>
+            <h3>Segurança</h3>
+            <p>Sempre desconecte a alimentação antes de fazer alterações no circuito. Use fusíveis adequados para proteger o sistema.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Popup para Nota Máxima -->
+  <div id="popupNota" class="popup-overlay">
+    <div class="popup-content">
+      <span class="popup-close" onclick="fecharPopupNota()">&times;</span>
+      <h2>🎉 Obrigado pela Nota Máxima! 🎉</h2>
+      <div class="popup-image">
+        <img src="./assets/euclerio.png"/>
+      </div>
+      <p>Seu projeto merece nota máxima! 🌟</p>
+      <button class="btn btn-success" onclick="fecharPopupNota()">Obrigado!</button>
+    </div>
+  </div>
+
+  <!-- Canvas para fogos de artifício -->
+  <canvas id="fireworksCanvas"></canvas>
 
   <script src="script.js"></script>
 </body>

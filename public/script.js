@@ -264,3 +264,211 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Sistema iniciado com automação no frontend');
     console.log('Configuração:', AUTOMATION_CONFIG);
 });
+
+// *** FUNCIONALIDADES DO MENU LATERAL E NAVEGAÇÃO ***
+
+// Função para navegar entre páginas
+function navegarPara(pagina) {
+    // Remove classe active de todas as páginas
+    const todasPaginas = document.querySelectorAll('.page');
+    todasPaginas.forEach(p => p.classList.remove('active'));
+    
+    // Remove classe active de todos os botões do header
+    const todosBotoes = document.querySelectorAll('.nav-btn');
+    todosBotoes.forEach(btn => btn.classList.remove('active'));
+    
+    // Ativa a página selecionada
+    const paginaSelecionada = document.getElementById(pagina);
+    if (paginaSelecionada) {
+        paginaSelecionada.classList.add('active');
+    }
+    
+    // Ativa o botão correspondente no header
+    const botaoAtivo = document.querySelector(`[data-page="${pagina}"]`);
+    if (botaoAtivo) {
+        botaoAtivo.classList.add('active');
+    }
+    
+    console.log(`Navegando para: ${pagina}`);
+}
+
+// *** FUNCIONALIDADES DO POPUP E FOGOS DE ARTIFÍCIO ***
+
+// Função para mostrar popup de nota máxima
+function mostrarPopupNota() {
+    const popup = document.getElementById('popupNota');
+    if (popup) {
+        popup.classList.add('active');
+        iniciarFogosDeArtificio();
+    }
+}
+
+// Função para fechar popup
+function fecharPopupNota() {
+    const popup = document.getElementById('popupNota');
+    if (popup) {
+        popup.classList.remove('active');
+        pararFogosDeArtificio();
+    }
+}
+
+// *** SISTEMA DE FOGOS DE ARTIFÍCIO ***
+
+let animacaoFogos = null;
+let canvas = null;
+let ctx = null;
+let fogos = [];
+
+// Classe para representar um fogo de artifício
+class FogoDeArtificio {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particulas = [];
+        this.cores = ['#ffae00', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+        this.criarParticulas();
+    }
+    
+    criarParticulas() {
+        const numParticulas = 15 + Math.random() * 15;
+        for (let i = 0; i < numParticulas; i++) {
+            this.particulas.push({
+                x: this.x,
+                y: this.y,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
+                vida: 1.0,
+                cor: this.cores[Math.floor(Math.random() * this.cores.length)],
+                tamanho: 2 + Math.random() * 3
+            });
+        }
+    }
+    
+    atualizar() {
+        this.particulas.forEach(particula => {
+            particula.x += particula.vx;
+            particula.y += particula.vy;
+            particula.vy += 0.1; // gravidade
+            particula.vida -= 0.02;
+            particula.vx *= 0.99; // resistência do ar
+            particula.vy *= 0.99;
+        });
+        
+        // Remove partículas mortas
+        this.particulas = this.particulas.filter(p => p.vida > 0);
+        
+        return this.particulas.length > 0;
+    }
+    
+    desenhar(ctx) {
+        this.particulas.forEach(particula => {
+            ctx.save();
+            ctx.globalAlpha = particula.vida;
+            ctx.fillStyle = particula.cor;
+            ctx.beginPath();
+            ctx.arc(particula.x, particula.y, particula.tamanho, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        });
+    }
+}
+
+// Função para iniciar fogos de artifício
+function iniciarFogosDeArtificio() {
+    canvas = document.getElementById('fireworksCanvas');
+    if (!canvas) return;
+    
+    ctx = canvas.getContext('2d');
+    canvas.style.display = 'block';
+    
+    // Ajusta o tamanho do canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Cria fogos iniciais
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            criarNovoFogo();
+        }, i * 300);
+    }
+    
+    // Inicia a animação
+    animarFogos();
+    
+    // Cria novos fogos periodicamente
+    animacaoFogos = setInterval(() => {
+        if (Math.random() < 0.7) {
+            criarNovoFogo();
+        }
+    }, 800);
+}
+
+// Função para criar um novo fogo
+function criarNovoFogo() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2);
+    fogos.push(new FogoDeArtificio(x, y));
+}
+
+// Função para animar os fogos
+function animarFogos() {
+    if (!canvas || !ctx) return;
+    
+    ctx.fillStyle = 'rgba(18, 18, 18, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Atualiza e desenha todos os fogos
+    fogos = fogos.filter(fogo => {
+        const ativo = fogo.atualizar();
+        fogo.desenhar(ctx);
+        return ativo;
+    });
+    
+    // Continua a animação se o popup estiver ativo
+    const popup = document.getElementById('popupNota');
+    if (popup && popup.classList.contains('active')) {
+        requestAnimationFrame(animarFogos);
+    }
+}
+
+// Função para parar fogos de artifício
+function pararFogosDeArtificio() {
+    if (animacaoFogos) {
+        clearInterval(animacaoFogos);
+        animacaoFogos = null;
+    }
+    
+    if (canvas) {
+        canvas.style.display = 'none';
+    }
+    
+    fogos = [];
+}
+
+// *** EVENTOS E INICIALIZAÇÃO ADICIONAL ***
+
+// Adiciona evento para redimensionar canvas
+window.addEventListener('resize', () => {
+    if (canvas && canvas.style.display !== 'none') {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+});
+
+// Adiciona evento para fechar popup com ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        fecharPopupNota();
+    }
+});
+
+// Adiciona evento para fechar popup clicando fora
+document.addEventListener('click', (e) => {
+    const popup = document.getElementById('popupNota');
+    if (popup && popup.classList.contains('active') && e.target === popup) {
+        fecharPopupNota();
+    }
+});
+
+console.log('Funcionalidades do menu lateral e fogos de artifício carregadas!');
+
