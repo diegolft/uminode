@@ -84,18 +84,91 @@
         <h1>Documentação Arduino</h1>
         <div class="card">
           <div class="doc-content">
-            <h2>Configuração do Arduino</h2>
-            <p>Esta seção contém informações sobre a configuração e programação do Arduino para o sistema de irrigação.</p>
-            <h3>Componentes Necessários</h3>
-            <ul>
-              <li>Arduino Uno ou similar</li>
-              <li>Sensor de umidade do solo</li>
-              <li>Relé para controle da bomba</li>
-              <li>Bomba d'água</li>
-              <li>Módulo WiFi (ESP8266 ou similar)</li>
-            </ul>
+            <h2>Configuração e Código do Arduino</h2>
+            <p>Esta seção contém informações sobre a configuração e programação do Arduino para o sistema de irrigação. O código abaixo é o firmware que roda no Arduino, responsável por ler o sensor de umidade e controlar a bomba com base nos comandos recebidos do servidor.</p>
             <h3>Código Base</h3>
-            <p>O código do Arduino deve incluir a leitura do sensor de umidade e o controle da bomba através de comandos recebidos via comunicação serial ou WiFi.</p>
+            <pre class="arduino-code">
+<span class="comment">// Sistema de Irrigacao - Arduino apenas envia dados e recebe comandos</span>
+<span class="keyword">const int</span> PINO_SENSOR = A0;
+<span class="keyword">const int</span> PINO_RELE = 2;
+
+<span class="comment">// Para calibracao e conversao para porcentagem</span>
+<span class="keyword">const int</span> VALOR_SECO_MAX = 1023;       <span class="comment">// Sensor totalmente seco</span>
+<span class="keyword">const int</span> VALOR_UMIDO_MAX = 300;       <span class="comment">// Sensor totalmente úmido</span>
+
+bool bomba_ligada = <span class="literal">false</span>;
+bool monitoramento_ativo = <span class="literal">false</span>;
+unsigned long ultimo_tempo = 0;
+<span class="keyword">const unsigned long</span> INTERVALO_LEITURA = 2000;
+
+<span class="function">void setup</span>() {
+  <span class="function">pinMode</span>(PINO_SENSOR, INPUT);
+  <span class="function">pinMode</span>(PINO_RELE, OUTPUT);
+  <span class="function">digitalWrite</span>(PINO_RELE, LOW);
+  
+  <span class="function">Serial.begin</span>(9600);
+  <span class="function">Serial.println</span>(<span class="string">"ARDUINO_READY"</span>);
+}
+
+<span class="function">void loop</span>() {
+  unsigned long tempo_atual = <span class="function">millis</span>();
+  
+  <span class="comment">// Verifica comandos do servidor web</span>
+  <span class="keyword">if</span> (<span class="function">Serial.available</span>() > 0) {
+    String comando = <span class="function">Serial.readStringUntil</span>(
+);
+    <span class="function">comando.trim</span>();
+    
+    <span class="keyword">if</span> (comando == <span class="string">"LIGAR_BOMBA"</span>) {
+      <span class="function">digitalWrite</span>(PINO_RELE, HIGH);
+      bomba_ligada = <span class="literal">true</span>;
+      <span class="function">Serial.println</span>(<span class="string">"BOMBA_LIGADA"</span>);
+    }
+    <span class="keyword">else if</span> (comando == <span class="string">"DESLIGAR_BOMBA"</span>) {
+      <span class="function">digitalWrite</span>(PINO_RELE, LOW);
+      bomba_ligada = <span class="literal">false</span>;
+      <span class="function">Serial.println</span>(<span class="string">"BOMBA_DESLIGADA"</span>);
+    }
+    <span class="keyword">else if</span> (comando == <span class="string">"START_MONITORING"</span>) {
+      monitoramento_ativo = <span class="literal">true</span>;
+      <span class="function">Serial.println</span>(<span class="string">"MONITORAMENTO_INICIADO"</span>);
+    }
+    <span class="keyword">else if</span> (comando == <span class="string">"STOP_MONITORING"</span>) {
+      monitoramento_ativo = <span class="literal">false</span>;
+      <span class="function">Serial.println</span>(<span class="string">"MONITORAMENTO_PARADO"</span>);
+    }
+    <span class="keyword">else if</span> (comando == <span class="string">"GET_STATUS"</span>) {
+      <span class="function">enviarStatus</span>();
+    }
+  }
+  
+  <span class="comment">// Leitura do sensor a cada intervalo (só se monitoramento ativo)</span>
+  <span class="keyword">if</span> (monitoramento_ativo && (tempo_atual - ultimo_tempo >= INTERVALO_LEITURA)) {
+    ultimo_tempo = tempo_atual;
+    <span class="function">enviarStatus</span>();
+  }
+  
+  <span class="function">delay</span>(100);
+}
+
+<span class="function">void enviarStatus</span>() {
+  <span class="keyword">int</span> valor_bruto = <span class="function">analogRead</span>(PINO_SENSOR);
+  
+  <span class="comment">// Calcula porcentagem de umidade para exibição</span>
+  <span class="keyword">int</span> umidade_percent = <span class="function">map</span>(valor_bruto, VALOR_SECO_MAX, VALOR_UMIDO_MAX, 0, 100);
+  umidade_percent = <span class="function">constrain</span>(umidade_percent, 0, 100);
+  
+  <span class="comment">// Formato: DATA|umidade_percent|bomba_status|valor_bruto|timestamp</span>
+  <span class="function">Serial.print</span>(<span class="string">"DATA|"</span>);
+  <span class="function">Serial.print</span>(umidade_percent);
+  <span class="function">Serial.print</span>(<span class="string">"|"</span>);
+  <span class="function">Serial.print</span>(bomba_ligada ? <span class="string">"ON"</span> : <span class="string">"OFF"</span>);
+  <span class="function">Serial.print</span>(<span class="string">"|"</span>);
+  <span class="function">Serial.print</span>(valor_bruto);
+  <span class="function">Serial.print</span>(<span class="string">"|"</span>);
+  <span class="function">Serial.println</span>(<span class="function">millis</span>());
+}
+            </pre>
           </div>
         </div>
       </div>
@@ -108,18 +181,11 @@
           <div class="doc-content">
             <h2>Interface do Usuário</h2>
             <p>O front-end foi desenvolvido com HTML, CSS e JavaScript vanilla para proporcionar uma interface simples e responsiva.</p>
-            <h3>Estrutura dos Arquivos</h3>
+            <h3>Botões de Ação</h3>
             <ul>
-              <li><strong>index.html</strong> - Estrutura principal da página</li>
-              <li><strong>style.css</strong> - Estilos e tema escuro</li>
-              <li><strong>script.js</strong> - Lógica de automação e comunicação com o backend</li>
-            </ul>
-            <h3>Funcionalidades</h3>
-            <ul>
-              <li>Monitoramento em tempo real do sensor de umidade</li>
-              <li>Controle manual da bomba</li>
-              <li>Sistema de automação configurável</li>
-              <li>Interface responsiva para dispositivos móveis</li>
+              <li><strong>Ligar Bomba</strong>: Envia um comando para ligar a bomba de irrigação.</li>
+              <li><strong>Desligar Bomba</strong>: Envia um comando para desligar a bomba de irrigação.</li>
+              <li><strong>Desativar Automação / Ativar Automação</strong>: Alterna o estado da automação do sistema.</li>
             </ul>
           </div>
         </div>
@@ -135,14 +201,24 @@
             <p>O backend foi desenvolvido em Node.js com Express para gerenciar a comunicação entre o frontend e o Arduino.</p>
             <h3>Endpoints da API</h3>
             <ul>
-              <li><strong>GET /api/status</strong> - Retorna o status atual do sistema</li>
-              <li><strong>POST /api/bomba/ligar</strong> - Liga a bomba de irrigação</li>
-              <li><strong>POST /api/bomba/desligar</strong> - Desliga a bomba de irrigação</li>
+              <li><strong>GET /api/status</strong>: Retorna o status atual do sistema.</li>
+              <li><strong>POST /api/bomba/ligar</strong>: Liga a bomba de irrigação.</li>
+              <li><strong>POST /api/bomba/desligar</strong>: Desliga a bomba de irrigação.</li>
             </ul>
-            <h3>Comunicação Serial</h3>
-            <p>O servidor utiliza a biblioteca SerialPort para comunicação com o Arduino via USB ou módulo WiFi.</p>
-            <h3>Configuração</h3>
-            <p>As configurações de porta serial e parâmetros de automação podem ser ajustadas no arquivo server.js.</p>
+            <h3>Dados Esperados do Arduino</h3>
+            <p>O servidor espera do Arduino dados no formato <code>DATA|umidade_percent|bomba_status|valor_bruto|timestamp</code>, onde:</p>
+            <ul>
+              <li><code>umidade_percent</code>: Umidade do solo em porcentagem (0-100).</li>
+              <li><code>bomba_status</code>: Estado da bomba ("ON" ou "OFF").</li>
+              <li><code>valor_bruto</code>: Leitura bruta do sensor de umidade.</li>
+              <li><code>timestamp</code>: Tempo em milissegundos desde o início do Arduino.</li>
+            </ul>
+            <h3>Ações do Servidor</h3>
+            <ul>
+              <li>Recebe dados do Arduino via comunicação serial.</li>
+              <li>Envia comandos para o Arduino (LIGAR_BOMBA, DESLIGAR_BOMBA, START_MONITORING, STOP_MONITORING, GET_STATUS).</li>
+              <li>Expõe endpoints para o frontend controlar o sistema.</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -154,20 +230,20 @@
         <div class="card">
           <div class="doc-content">
             <h2>Esquema do Circuito</h2>
-            <p>Esta seção descreve as conexões elétricas necessárias para o sistema de irrigação automatizada.</p>
+            <p>Esta seção descreve as conexões elétricas necessárias para o sistema de irrigação automatizada. A imagem abaixo ilustra o esquema de ligação dos componentes:</p>
+            <div class="circuit-image">
+              <img src="./assets/circuito.png" alt="Esquema do Circuito Arduino" />
+            </div>
             <h3>Conexões do Arduino</h3>
             <ul>
-              <li><strong>Pino A0</strong> - Sensor de umidade do solo (saída analógica)</li>
-              <li><strong>Pino 7</strong> - Controle do relé da bomba</li>
-              <li><strong>5V e GND</strong> - Alimentação dos sensores</li>
-              <li><strong>Pinos 2 e 3</strong> - Comunicação serial com módulo WiFi (opcional)</li>
+              <li><strong>Sensor de Umidade do Solo</strong>: Conectado ao pino analógico <strong>A0</strong> do Arduino. A alimentação do sensor (VCC e GND) deve ser feita pelos pinos 5V e GND do Arduino, respectivamente.</li>
+              <li><strong>Módulo Relé</strong>: O pino de controle do relé (IN) é conectado ao pino digital <strong>2</strong> do Arduino. A alimentação do módulo relé (VCC e GND) também deve ser feita pelos pinos 5V e GND do Arduino.</li>
+              <li><strong>Bomba d'água</strong>: Conectada ao módulo relé. O relé atua como um interruptor, controlando o fluxo de corrente para a bomba. Certifique-se de que a bomba e o relé são compatíveis com a tensão e corrente da fonte de alimentação.</li>
             </ul>
-            <h3>Sensor de Umidade</h3>
-            <p>O sensor de umidade capacitivo deve ser conectado ao pino analógico A0. Valores menores indicam solo mais seco.</p>
-            <h3>Relé e Bomba</h3>
-            <p>O relé deve ser conectado ao pino digital 7 e controlar a alimentação da bomba d'água. Importante usar um relé adequado para a corrente da bomba.</p>
+            <h3>Funcionamento</h3>
+            <p>O sensor de umidade lê o nível de umidade do solo e envia um sinal analógico para o Arduino. O Arduino, por sua vez, processa essa leitura e, com base na lógica programada (ou comandos do servidor), ativa ou desativa o módulo relé, que controla a bomba d'água. Isso permite que o sistema irrigue automaticamente quando o solo estiver seco e pare quando estiver úmido.</p>
             <h3>Segurança</h3>
-            <p>Sempre desconecte a alimentação antes de fazer alterações no circuito. Use fusíveis adequados para proteger o sistema.</p>
+            <p>Sempre desconecte a alimentação antes de fazer alterações no circuito. Use fusíveis adequados para proteger o sistema e evite contato direto com a água e componentes elétricos.</p>
           </div>
         </div>
       </div>
@@ -180,7 +256,7 @@
       <span class="popup-close" onclick="fecharPopupNota()">&times;</span>
       <h2>🎉 Obrigado pela Nota Máxima! 🎉</h2>
       <div class="popup-image">
-        <img src="./assets/euclerio.png"/>
+        <img src="./assets/euclerio.png" alt="Nota 10" />
       </div>
       <p>Seu projeto merece nota máxima! 🌟</p>
       <button class="btn btn-success" onclick="fecharPopupNota()">Obrigado!</button>

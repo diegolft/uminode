@@ -168,366 +168,24 @@ h1 {
 }
 
 .error-message {
-  position: fixed; /* Alterado para fixed */
-  top: 70px; /* Ajustado para o topo */
-  right: 20px; /* Ajustado para a direita */
-  left: auto; /* Removido para não centralizar horizontalmente */
-  transform: none; /* Removido para não centralizar */
+  position: fixed; 
+  top: 120px; 
+  right: 20px; 
+  left: auto; 
+  transform: none; 
   text-align: center;
-  background-color: #702323; /* Fundo vermelho para destaque */
-  padding: 10px 15px; /* Mais padding */
-  border-radius: 8px; /* Borda arredondada */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra para destaque */
-  font-size: 1rem; /* Tamanho da fonte */
-  font-weight: bold; /* Negrito */
-  z-index: 2000; /* Z-index alto para sobrepor tudo */
-  max-width: 250px; /* Limitar largura */
-  white-space: nowrap; /* Evitar quebra de linha */
-  overflow: hidden; /* Esconder overflow */
-  text-overflow: ellipsis; /* Adicionar reticências */
-  width: 100%;
-  text-align: center;
-  color: #ffffff;
-  font-size: 0.9rem;
-}
-
-.sensor-card {
-  text-align: center;
-}
-
-.sensor-card h2 {
-  font-size: 1.3rem;
-  color: #d1d1d1;
-  margin-bottom: 1rem;
-}
-
-.sensor-value {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #ffae00;
-  background-color: #1f1f1f;
-  padding: 1rem;
-  border-radius: 10px;
-}
-
-.bomba-card h2 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-}
-
-.pump-status {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
-  color: #f3f3f3;
-  margin-bottom: 1rem;
-}
-
-.pump-indicator {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #444;
-}
-
-.indicator-on {
-  background-color: #22c55e;
-}
-
-.indicator-off {
-  background-color: #ef4444;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-success {
-  background-color: #346646;
-  color: #ffffff;
-}
-
-.btn-success:hover {
-  background-color: #16a34a;
-}
-
-.btn-danger {
-  background-color: #5c2030;
-  color: #ffffff;
-}
-
-.btn-danger:hover {
-  background-color: #dc2626;
-}
-
-.btn-warning {
-  background-color: #8b5a00;
-  color: #ffffff;
-}
-
-.btn-warning:hover {
-  background-color: #f59e0b;
-}
-
-/* Documentação */
-.doc-content {
-  line-height: 1.6;
-}
-
-.doc-content h2 {
-  color: #ffffff;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-
-.doc-content h3 {
-  color: #d1d1d1;
-  margin: 1.5rem 0 0.5rem 0;
-  font-size: 1.2rem;
-}
-
-.doc-content p {
-  margin-bottom: 1rem;
-  color: #e0e0e0;
-}
-
-.doc-content ul {
-  margin: 0.5rem 0 1rem 1.5rem;
-  color: #e0e0e0;
-}
-
-.doc-content li {
-  margin-bottom: 0.5rem;
-}
-
-.doc-content strong {
-  color: #ffae00;
-}
-
-/* Popup */
-.popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-overlay.active {
-  display: flex;
-}
-
-.popup-content {
-  background-color: #1e1e1e;
-  padding: 3rem;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 2000px;
-  width: 100%;
-  position: relative;
-  border: 2px solid #ffae00;
-  box-shadow: 0 0 20px rgba(255, 174, 0, 0.3);
-}
-
-.popup-close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  color: #a0a0a0;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.popup-close:hover {
-  color: #ffffff;
-}
-
-.popup-content h2 {
-  color: #ffae00;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-
-.popup-image {
-  margin: 1rem 0;
-}
-
-.popup-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-
-.popup-content p {
-  color: #e0e0e0;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-}
-
-/* Canvas para fogos de artifício */
-#fireworksCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1500;
-  display: none;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    min-height: auto;
-  }
-  
-  .header-title {
-    text-align: center;
-  }
-  
-  .header-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.3rem;
-  }
-  
-  .nav-btn {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
-  }
-  
-  .nav-text {
-    display: none;
-  }
-  
-  .nav-icon {
-    font-size: 1.2rem;
-  }
-  
-  .main-content {
-    padding: 1rem;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-  }
-  
-  .sensor-value {
-    font-size: 2rem;
-  }
-  
-  .popup-content {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-nav {
-    gap: 0.2rem;
-  }
-  
-  .nav-btn {
-    padding: 0.3rem 0.4rem;
-    min-width: 40px;
-  }
-  
-  .nav-icon {
-    font-size: 1.1rem;
-  }
-}
-
-.page {
-  display: none;
-  width: 100%;
-  max-width: 800px;
-}
-
-.page.active {
-  display: block;
-}
-
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  color: #ffffff;
-  margin-bottom: 1rem;
-}
-
-.card {
-  background: #1e1e1e;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #00000044;
-}
-
-.status-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.status-badge {
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: white;
-}
-
-.status-connected {
-  background-color: #346646;
-}
-
-.status-disconnected {
-  background-color: #702323;
-}
-
-.update-time {
-  font-size: 0.85rem;
-  color: #a0a0a0;
-}
-
-.error-message {
-  width: 100%;
-  text-align: center;
-  font-size: 0.9rem;
+  background-color: #702323; 
+  padding: 10px 15px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
+  font-size: 1rem; 
+  font-weight: bold; 
+  z-index: 2000; 
+  max-width: 250px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  color: #ffffff; 
 }
 
 .sensor-card {
@@ -681,8 +339,8 @@ h1 {
   padding: 2rem;
   border-radius: 12px;
   text-align: center;
-  max-width: 400px;
-  width: 90%;
+  max-width: 600px;
+  width: 100%;
   position: relative;
   border: 2px solid #ffae00;
   box-shadow: 0 0 20px rgba(255, 174, 0, 0.3);
@@ -713,10 +371,12 @@ h1 {
 }
 
 .popup-image img {
-  width: 200px;
-  height: 200px;
+  max-width: 90%;
+  height: auto;
   border-radius: 8px;
+  object-fit: contain;
 }
+
 
 .popup-content p {
   color: #e0e0e0;
@@ -862,13 +522,6 @@ h1 {
   color: #a0a0a0;
 }
 
-.error-message {
-  width: 100%;
-  text-align: center;
-  color: #ffffff;
-  font-size: 0.9rem;
-}
-
 .sensor-card {
   text-align: center;
 }
@@ -997,146 +650,53 @@ h1 {
   color: #ffae00;
 }
 
-/* Popup */
-.popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-overlay.active {
-  display: flex;
-}
-
-.popup-content {
-  background-color: #1e1e1e;
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  position: relative;
-  border: 2px solid #ffae00;
-  box-shadow: 0 0 20px rgba(255, 174, 0, 0.3);
-}
-
-.popup-close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  color: #a0a0a0;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.popup-close:hover {
-  color: #ffffff;
-}
-
-.popup-content h2 {
-  color: #ffae00;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-
-.popup-image {
-  margin: 1rem 0;
-}
-
-.popup-image img {
-  width: 200px;
-  height: 200px;
+/* Destaque de sintaxe para código Arduino */
+.arduino-code {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 1rem;
   border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Cascadia Code', 'Source Code Pro', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-.popup-content p {
-  color: #e0e0e0;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
+.arduino-code .comment {
+  color: #5c6370;
 }
 
-/* Canvas para fogos de artifício */
-#fireworksCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1500;
-  display: none;
+.arduino-code .keyword {
+  color: #c678dd;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    min-height: auto;
-  }
-  
-  .header-title {
-    text-align: center;
-  }
-  
-  .header-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.3rem;
-  }
-  
-  .nav-btn {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
-  }
-  
-  .nav-text {
-    display: none;
-  }
-  
-  .nav-icon {
-    font-size: 1.2rem;
-  }
-  
-  .main-content {
-    padding: 1rem;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-  }
-  
-  .sensor-value {
-    font-size: 2rem;
-  }
-  
-  .popup-content {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
+.arduino-code .function {
+  color: #61afef;
 }
 
-@media (max-width: 480px) {
-  .header-nav {
-    gap: 0.2rem;
-  }
-  
-  .nav-btn {
-    padding: 0.3rem 0.4rem;
-    min-width: 40px;
-  }
-  
-  .nav-icon {
-    font-size: 1.1rem;
-  }
+.arduino-code .literal {
+  color: #d19a66;
 }
+
+.arduino-code .string {
+  color: #98c379;
+}
+
+/* Imagem do circuito */
+.circuit-image {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.circuit-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-warning, .btn-success {
+  min-width: 180px; /* Garante largura mínima para evitar movimento */
+}
+
 
